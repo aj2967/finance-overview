@@ -12,4 +12,5 @@ class IntegrationsList extends Model
 
     protected $table = 'integrations_list';
     public $timestamps = true;
+    public $casts = ['tags' => 'json'];
 }
