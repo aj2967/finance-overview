@@ -16,9 +16,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 //         return Inertia::render('dashboard');
 //     })->name('dashboard');
 
-    Route::get('/integrations', function () {
-        return Inertia::render('integrations');
-    })->name('integrations');
+    Route::get('/integrations', [\App\Http\Controllers\Integration\IntegrationsController::class, 'index'])
+        ->name('integrations.index');
+
 });
 
 require __DIR__.'/settings.php';

@@ -20,5 +20,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'aj@test.com',
             'password' => '$2y$12$XeLzhPZ9Vu2DQpSZPDKUIOpwfVtegpz5ZZwWeodL7J9AXoiDVBUB6',
         ]);
+
+        // Populate the database with additional seeds
+        $this->call([
+            IntegrationsListSeeder::class,
+        ]);
     }
 }
