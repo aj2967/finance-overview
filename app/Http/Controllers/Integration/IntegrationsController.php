@@ -20,7 +20,7 @@ class IntegrationsController extends Controller
             ->get()
             ->toArray();
 
-        return Inertia::render('integrations', compact('integrations'));
+        return Inertia::render('integrations/Integrations', compact('integrations'));
     }
 
     public function show(string $slug)
@@ -28,7 +28,7 @@ class IntegrationsController extends Controller
         // Find the integration by slug
         $integration = IntegrationsList::where('url', $slug)->firstOrFail();
 
-        return Inertia::render('integrationDetails', [
+        return Inertia::render('integrations/IntegrationDetailsLayout', [
             'integration' => $integration,
         ]);
     }

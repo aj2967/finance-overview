@@ -1,13 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
+
+// Integration Components
+import Trading212 from './components/Trading212';
 
 interface Props {
     integration: {
@@ -21,11 +20,9 @@ interface Props {
         tags: [] | string;
         is_featured: boolean;
     };
-    children?: React.ReactNode;
 }
 
-export default function IntegrationDetails({ integration, children }: Props) {
-    console.log(integration.tags);
+export default function IntegrationDetailsLayout({ integration }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Integrations',
@@ -61,63 +58,8 @@ export default function IntegrationDetails({ integration, children }: Props) {
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     {/* Left Column - Connection & Settings */}
                     <div className="space-y-6 lg:col-span-2">
-                        {/* Connection Status Card */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Connection</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="api-key">API Key</Label>
-                                    <div className="flex gap-2">
-                                        <Input id="api-key" type="password" placeholder="Enter your API key" className="flex-1" />
-                                        <Button variant="secondary">Test Connection</Button>
-                                    </div>
-                                </div>
-
-                                <div className="bg-muted flex items-center justify-between rounded-lg p-4">
-                                    <div>
-                                        <p className="font-medium">Auto-sync</p>
-                                        <p className="text-muted-foreground text-sm">Enable automatic data synchronization</p>
-                                    </div>
-                                    <Switch />
-                                </div>
-                            </CardContent>
-                            <CardFooter className="flex justify-end gap-2">
-                                <Button variant="outline">Disconnect</Button>
-                                <Button>Save Changes</Button>
-                            </CardFooter>
-                        </Card>
-
-                        {/* Data Management Section */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Data Management</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="bg-muted flex items-center justify-between rounded-lg p-4">
-                                    <div>
-                                        <p className="font-medium">Last Synced</p>
-                                        <p className="text-muted-foreground text-sm">January 15, 2024 at 14:30</p>
-                                    </div>
-                                    <Button variant="secondary">Sync Now</Button>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label>Sync Frequency</Label>
-                                    <Tabs defaultValue="daily">
-                                        <TabsList>
-                                            <TabsTrigger value="daily">Daily</TabsTrigger>
-                                            <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                                            <TabsTrigger value="manual">Manual</TabsTrigger>
-                                        </TabsList>
-                                    </Tabs>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Children Content for Specific Integrations */}
-                        {children}
+                        {/* Content for Specific Integrations */}
+                        <Trading212 integration={integration} />
                     </div>
 
                     {/* Right Column - Additional Info & Actions */}

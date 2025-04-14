@@ -3,25 +3,19 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
+// Temporarily modify url to redirect guest users to login page
+Route::get('/home', function () {
     if (auth()->check()) {
-        return Inertia::render('dashboard');
+        return Inertia::render('Dashboard');
     }
 
-    return Inertia::render('welcome');
+    return Inertia::render('Welcome');
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-//     Route::get('/', function () {
-//         return Inertia::render('dashboard');
-//     })->name('dashboard');
-
-    Route::get('/integrations', [\App\Http\Controllers\Integration\IntegrationsController::class, 'index'])
-        ->name('integrations.index');
-
-    Route::get('/integrations/{slug}', [\App\Http\Controllers\Integration\IntegrationsController::class, 'show'])
-        ->name('integrations.show');
-
+    Route::get('/', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
 });
 
 require __DIR__.'/settings.php';
