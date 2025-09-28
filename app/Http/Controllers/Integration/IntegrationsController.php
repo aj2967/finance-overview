@@ -3,12 +3,22 @@
 namespace App\Http\Controllers\Integration;
 
 use App\Http\Controllers\Controller;
-use App\Models\IntegrationsList;
+use App\Http\Requests\Integrations\IntegrationsRequest;
+use App\Models\Integrations\IntegrationsList;
+use App\Models\Integrations\UserIntegrations;
+use App\Services\IntegrationService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class IntegrationsController extends Controller
 {
+    private IntegrationService $integrationService;
+
+    public function __construct(IntegrationService $integrationService)
+    {
+        $this->integrationService = $integrationService;
+    }
+
     public function index(Request $request)
     {
         $integrations = IntegrationsList::query()
@@ -27,9 +37,56 @@ class IntegrationsController extends Controller
     {
         // Find the integration by slug
         $integration = IntegrationsList::where('url', $slug)->firstOrFail();
+        $userIntegration = UserIntegrations::where('integration_id', $integration->id)
+            ->where('user_id', auth()->id())
+            ->first();
 
         return Inertia::render('integrations/IntegrationDetailsLayout', [
             'integration' => $integration,
+            'userIntegration' => $userIntegration,
         ]);
     }
+
+    public function saveConnection(IntegrationsRequest $request, IntegrationsList $integration)
+    {
+        $this->integrationService->updateApiKey($integration->id, $request->getApiKey());
+
+        return back()->with('success', 'API Key updated successfully');
+    }
+
+    // public function updateAutoSync(IntegrationsRequest $request, UserIntegrations $integration)
+    // {
+    //     $this->integrationService->updateAutoSync(
+    //         $integration,
+    //         $request->validated()['auto_sync']
+    //     );
+
+    //     return back()->with('success', 'Auto-sync setting updated');
+    // }
+
+    // public function updateSyncFrequency(IntegrationsRequest $request, UserIntegrations $integration)
+    // {
+    //     $this->integrationService->updateSyncFrequency(
+    //         $integration,
+    //         $request->validated()['sync_frequency']
+    //     );
+
+    //     return back()->with('success', 'Sync frequency updated');
+    // }
+
+    // public function syncNow(UserIntegrations $integration)
+    // {
+    //     try {
+    //         $this->integrationService->syncData($integration);
+    //         return back()->with('success', 'Data synced successfully');
+    //     } catch (\Exception $e) {
+    //         return back()->with('error', 'Sync failed: ' . $e->getMessage());
+    //     }
+    // }
+
+    // public function destroy(UserIntegrations $integration)
+    // {
+    //     $this->integrationService->deactivate($integration);
+    //     return back()->with('success', 'Integration disconnected');
+    // }
 }

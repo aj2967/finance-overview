@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Integrations;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\IntegrationsList>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Integrations\IntegrationsList>
  */
 class IntegrationsListFactory extends Factory
 {
@@ -26,5 +26,13 @@ class IntegrationsListFactory extends Factory
             'tags' => json_encode($this->faker->words(3)),
             'is_featured' => $this->faker->boolean,
         ];
+    }
+
+    /**
+     * Custom Trading212 integration
+     */
+    public function customIntegration(): Factory
+    {
+        return $this->state(fn (array $attributes) => dd($attributes));
     }
 }

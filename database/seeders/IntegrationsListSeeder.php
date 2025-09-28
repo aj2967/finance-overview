@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\IntegrationsList;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Integrations\IntegrationsList;
 use Illuminate\Database\Seeder;
 
 class IntegrationsListSeeder extends Seeder

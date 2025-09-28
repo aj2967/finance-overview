@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('integrations', function (Blueprint $table) {
+        Schema::create('user_integrations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['bank', 'investment']);
             $table->string('provider')->comment('The name of the provider, e.g., TrueLayer, HSBC, Binance, Trading212');
             $table->string('name');
+            $table->string('api_key')->nullable();
             $table->string('access_token')->nullable();
             $table->string('refresh_token')->nullable();
+            $table->tinyInteger('auto_sync')->default(1);
+            $table->enum('sync_frequency', ['manual', 'hourly', 'daily', 'weekly'])->default('daily');
             $table->json('metadata')->nullable()->comment('Additional information about the integration');
             $table->dateTime('connected_at')->nullable();
             $table->timestamps();
@@ -30,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('integrations');
+        Schema::dropIfExists('user_integrations');
     }
 };
