@@ -7,22 +7,14 @@ import { Head } from '@inertiajs/react';
 
 // Integration Components
 import Trading212 from './components/Trading212';
+import { Integration, UserIntegration } from '@/types/integration';
 
 interface Props {
-    integration: {
-        id: number;
-        status: 'active' | 'inactive';
-        name: string;
-        url: string;
-        description: string;
-        icon: string;
-        category: string;
-        tags: [] | string;
-        is_featured: boolean;
-    };
+    integration: Integration;
+    userIntegration: UserIntegration;
 }
 
-export default function IntegrationDetailsLayout({ integration }: Props) {
+export default function IntegrationDetailsLayout({ integration, userIntegration }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Integrations',
@@ -33,6 +25,8 @@ export default function IntegrationDetailsLayout({ integration }: Props) {
             href: `/integrations/${integration.url}`,
         },
     ];
+    console.log('details', integration);
+    console.log('userIntegration', userIntegration);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -59,7 +53,7 @@ export default function IntegrationDetailsLayout({ integration }: Props) {
                     {/* Left Column - Connection & Settings */}
                     <div className="space-y-6 lg:col-span-2">
                         {/* Content for Specific Integrations */}
-                        <Trading212 integration={integration} />
+                        <Trading212 userIntegration={userIntegration} />
                     </div>
 
                     {/* Right Column - Additional Info & Actions */}
@@ -93,20 +87,24 @@ export default function IntegrationDetailsLayout({ integration }: Props) {
                         </Card>
 
                         {/* Danger Zone */}
-                        <Card className="border-destructive">
-                            <CardHeader>
-                                <CardTitle className="text-destructive">Danger Zone</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="bg-muted flex items-center justify-between rounded-lg p-4">
-                                    <div>
-                                        <p className="font-medium">Remove Integration</p>
-                                        <p className="text-muted-foreground text-sm">Permanently disconnect and remove all data</p>
+                        {userIntegration && (
+                            <Card className="border-destructive">
+                                <CardHeader>
+                                    <CardTitle className="text-destructive">Danger Zone</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="bg-muted flex lg:flex-col lg:gap-4 xl:flex-row xl:gap-0 items-center justify-between rounded-lg p-4">
+                                        <div>
+                                            <p className="font-medium">Remove Integration</p>
+                                            <p className="text-muted-foreground text-sm">Permanently disconnect and remove all data</p>
+                                        </div>
+                                        <div className='lg:w-full xl:w-min flex justify-end ml-2'>
+                                            <Button variant="destructive">Disconnect</Button>
+                                        </div>
                                     </div>
-                                    <Button variant="destructive">Disconnect</Button>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 </div>
             </div>
