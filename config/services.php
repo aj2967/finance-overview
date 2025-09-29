@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'brandfetch' => [
+        'client_id' => env('BRANDFETCH_CLIENT_ID'),
+        'secret' => env(env('BRANDFETCH_SECRET'))
+
+    ]
 ];
