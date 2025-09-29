@@ -4,6 +4,34 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+function Spinner() {
+  return (
+    <svg
+      className="animate-spin ml-2 text-muted-foreground"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <circle
+        className="opacity-25"
+        cx="8"
+        cy="8"
+        r="7"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <path
+        className="opacity-75"
+        d="M15 8a7 7 0 11-7-7"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
@@ -39,19 +67,32 @@ function Button({
   variant,
   size,
   asChild = false,
+  isLoading = false,
+  children,
+  disabled,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
+    asChild?: boolean,
+    isLoading?: boolean
   }) {
   const Comp = asChild ? Slot : "button"
 
   return (
     <Comp
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
+    data-slot="button"
+    className={cn(buttonVariants({ variant, size, className }))}
+    disabled={isLoading || disabled}
+    aria-busy={isLoading}
+    {...props}
+    >
+    <span
+        className={isLoading ? "flex justify-center items-center w-full" : ""}
+        style={isLoading ? { minWidth: "4em" } : {}}
+    >
+        {isLoading ? <Spinner /> : children}
+    </span>
+    </Comp>
   )
 }
 
