@@ -36,7 +36,9 @@ export default function Integrations({ integrations }: Props) {
                                 <div className="flex flex-col gap-4">
                                     <div className="flex w-full items-center justify-between">
                                         <img src={integration.icon} alt={integration.name} className="h-10 w-10 rounded-sm" />
-                                        {/* <div className='bg-green-500 text-green-900 p-2 shadow-xs rounded-full text-xs'></div> */}
+                                        <div className="rounded-md p-2 text-xs bg-sidebar-border/70 dark:bg-sidebar-border">
+                                            {integration.category.charAt(0).toUpperCase() + integration.category.slice(1)}
+                                        </div>
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-semibold">{integration.name}</h3>

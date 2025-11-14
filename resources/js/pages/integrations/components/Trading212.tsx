@@ -13,12 +13,16 @@ interface Props {
 }
 
 export default function Trading212({ userIntegration }: Props) {
-    const integrationId = 16;
+    const integrationId = 1;
 
     // API Key Form
-    const { data: apiKeyData, setData: setApiKey, post: postApiKey, processing: processingApiKey, errors: apiKeyErrors} = useForm({
-        api_key: userIntegration?.api_key || '',
-    });
+    const {
+        data: apiKeyData,
+        setData: setApiKey,
+        post: postApiKey,
+        processing: processingApiKey,
+        errors: apiKeyErrors
+    } = useForm({api_key: userIntegration?.api_key || '',});
     console.log(userIntegration)
 
     // Auto-Sync Form
@@ -86,7 +90,7 @@ export default function Trading212({ userIntegration }: Props) {
                                     className="flex-1"
                                     disabled={processingApiKey}
                                 />
-                                <Button variant="secondary" onClick={handleSaveConnection} disabled={processingApiKey}>
+                                <Button variant="secondary" isLoading={processingApiKey} onClick={handleSaveConnection} disabled={processingApiKey}>
                                     Connect
                                 </Button>
                             </div>

@@ -7,6 +7,7 @@ use App\Http\Requests\Integrations\IntegrationsRequest;
 use App\Models\Integrations\IntegrationsList;
 use App\Models\Integrations\UserIntegrations;
 use App\Services\IntegrationService;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -47,11 +48,24 @@ class IntegrationsController extends Controller
         ]);
     }
 
-    public function saveConnection(IntegrationsRequest $request, IntegrationsList $integration)
+    public function saveConnection(IntegrationsRequest $request, string $integrationId)
     {
-        $this->integrationService->updateApiKey($integration->id, $request->getApiKey());
+        try {
+            $integration = IntegrationsList::findOrFail($integrationId);
+            $userIntegration = $this->integrationService->updateApiKey(auth()->user(), $integration->id, $request->getApiKey());
 
-        return back()->with('success', 'API Key updated successfully');
+            if (empty($userIntegration) || !($userIntegration instanceof UserIntegrations)) {
+                logger()->error('Failed to create or update UserIntegration for user ID ' . auth()->id() . ' and integration ID ' . $integration->id);
+                return back()->with('error', 'Failed to save connection: Unable to create or update integration record.');
+            }
+            
+            // Trigger oauth process to connect the integration
+
+            return back()->with('success', 'API Key updated successfully');
+        } catch (Exception $e) {
+            logger($e->getMessage());
+            return back()->with('error', 'Failed to save connection: ' . $e->getMessage());
+        }
     }
 
     // public function updateAutoSync(IntegrationsRequest $request, UserIntegrations $integration)
