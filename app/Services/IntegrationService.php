@@ -4,43 +4,41 @@ namespace App\Services;
 
 use App\Models\Integrations\UserIntegrations;
 use App\Models\IntegrationsList;
+use App\Models\User;
 use App\Repositories\Interfaces\UserIntegrationsRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
+use InvalidArgumentException;
 
 
 class IntegrationService
 {
     private UserIntegrationsRepositoryInterface $userIntegrationsRepo;
+    private UserRepositoryInterface $userRepo;
 
-    private Authenticatable $user;
-
-    public function __construct(Authenticatable $user, UserRepositoryInterface $userRepo, UserIntegrationsRepositoryInterface $userIntegrationsRepo)
+    public function __construct(UserRepositoryInterface $userRepo, UserIntegrationsRepositoryInterface $userIntegrationsRepo)
     {
-        $this->user = $user;
         $this->userRepo = $userRepo;
         $this->userIntegrationsRepo = $userIntegrationsRepo;
     }
 
-    public function updateApiKey(int $integrationId, string $apiKey): void
+    public function updateApiKey(User $user, int $integrationId, string $apiKey): UserIntegrations
     {
-        // $users = $this->userRepo->find(auth()->id());
-        $userIntegration = $this->userIntegrationsRepo->updateOrCreate(
+        if (!$user->getKey()) {
+            throw new InvalidArgumentException('User not found');
+        }
+
+        return $this->userIntegrationsRepo->updateOrCreate(
             [
-                'user_id' => $this->user->id,
+                'user_id' => $user->id,
                 'integration_id' => $integrationId,
             ],
             [
-                'type' => 'investment',
-                'provider' => 'Tradin212',
-                'name' => 'Trading212',
                 'api_key' => $apiKey,
                 'sync_frequency' => 'daily',
                 'connected_at' => now(),
             ]
         );
-        dd($userIntegration);
-        // $integration->update(['api_key' => encrypt($apiKey)]);
     }
 
     public function updateAutoSync(UserIntegrations $integration, bool $autoSync): void
