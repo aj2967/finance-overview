@@ -28,8 +28,18 @@ class IntegrationsController extends Controller
                 fn($query) => $query->whereIn('status', ['active', 'inactive']),
                 fn($query) => $query->where('status', 'active')
             )
+            ->with([
+                'activeUserIntegrations' => function ($q) {
+                    $q->where('user_id', auth()->id());
+                }
+            ])
             ->get()
-            ->toArray();
+            ->map(function ($integration) {
+                $arr = $integration->toArray();
+                $arr['is_connected'] = $integration->activeUserIntegrations !== null;
+
+                return $arr;
+            });
 
         return Inertia::render('integrations/Integrations', compact('integrations'));
     }
@@ -58,7 +68,7 @@ class IntegrationsController extends Controller
                 logger()->error('Failed to create or update UserIntegration for user ID ' . auth()->id() . ' and integration ID ' . $integration->id);
                 return back()->with('error', 'Failed to save connection: Unable to create or update integration record.');
             }
-            
+
             // Trigger oauth process to connect the integration
 
             return back()->with('success', 'API Key updated successfully');

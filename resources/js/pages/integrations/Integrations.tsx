@@ -36,12 +36,21 @@ export default function Integrations({ integrations }: Props) {
                                 <div className="flex flex-col gap-4">
                                     <div className="flex w-full items-center justify-between">
                                         <img src={integration.icon} alt={integration.name} className="h-10 w-10 rounded-sm" />
-                                        <div className="rounded-md p-2 text-xs bg-sidebar-border/70 dark:bg-sidebar-border">
+                                        <div className="bg-sidebar-border/70 dark:bg-sidebar-border rounded-md p-2 text-xs">
                                             {integration.category.charAt(0).toUpperCase() + integration.category.slice(1)}
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-semibold">{integration.name}</h3>
+                                        <h3 className="flex items-center gap-2 text-lg font-semibold">
+                                            {integration.name}
+                                            <span>
+                                                {integration.is_connected && (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
+                                                    </div>
+                                                )}
+                                            </span>
+                                        </h3>
                                         <p className="text-sm text-neutral-500">{integration.description}</p>
                                     </div>
                                 </div>

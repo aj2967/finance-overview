@@ -8,6 +8,7 @@ export interface Integration {
     category: string;
     tags: [] | string;
     is_featured: boolean;
+    is_connected: boolean;
 }
 
 export interface UserIntegration {
