@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('user_integrations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['bank', 'investment']);
-            $table->string('provider')->comment('The name of the provider, e.g., TrueLayer, HSBC, Binance, Trading212');
-            $table->string('name');
+            $table->foreignId('integration_id')->constrained();
             $table->string('api_key')->nullable();
             $table->string('access_token')->nullable();
             $table->string('refresh_token')->nullable();

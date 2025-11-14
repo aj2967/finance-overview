@@ -17,12 +17,9 @@ class UserIntegrations extends Model
     protected $fillable = [
         'user_id',
         'integration_id',
-        'type',
-        'provider',
-        'name',
         'api_key',
-        'refresh_token',
         'access_token',
+        'refresh_token',
         'auto_sync',
         'sync_frequency',
         'metadata',

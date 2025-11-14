@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('integrations_list', function (Blueprint $table) {
             $table->id();
             $table->enum('status', ['active', 'inactive'])->default('inactive');
-            $table->string('name')->unique();
+            $table->string('name')->unique()->comment('The name of the provider, e.g., TrueLayer, HSBC, Binance, Trading212');
             $table->string('url')->unique();
             $table->string('description')->nullable();
             $table->string('icon')->nullable();

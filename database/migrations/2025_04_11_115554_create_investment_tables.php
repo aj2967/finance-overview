@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('investment_accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // Add user_integration_id to link to UserIntegrations table
             $table->string('provider')->comment('Specific investment account of an integration. Trading212 example - S&S ISA, Cash ISA, CFD, etc.');
             $table->string('name');
             $table->enum('type', ['stock', 'crypto', 'pension', 'trading']);
