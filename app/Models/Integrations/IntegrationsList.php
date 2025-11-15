@@ -12,7 +12,17 @@ class IntegrationsList extends Model
 
     protected $table = 'integrations_list';
     public $timestamps = true;
-    public $casts = ['tags' => 'json'];
+    public $casts = ['tags' => 'array'];
+    public $fillable = [
+        'status',
+        'name',
+        'url',
+        'description',
+        'icon',
+        'category',
+        'tags',
+        'is_featured',
+    ];
 
     public function activeUserIntegrations()
     {

@@ -53,7 +53,7 @@ class IntegrationsListFactory extends Factory
             'description' => $this->faker->sentence,
             'icon' => 'https://placehold.co/64x64/2563EB/ffffff?text=Icon',
             'category' => $this->faker->randomElement(['general', 'bank', 'stocks', 'crypto', 'property']),
-            'tags' => json_encode($this->faker->words(3)),
+            'tags' => $this->faker->words(3),
             'is_featured' => false,
         ];
     }
@@ -147,7 +147,7 @@ class IntegrationsListFactory extends Factory
             'description' => 'Trading212 is a fintech company that offers commission-free trading of stocks, ETFs, and cryptocurrencies through its mobile app and web platform.',
             'icon' => 'https://cdn.brandfetch.io/idljYeMpMH/w/400/h/400/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1696102241075',
             'category' => 'stocks',
-            'tags' => json_encode(['stocks', 'ETFs', 'cryptocurrencies', 'commission-free']),
+            'tags' => ['stocks', 'ETFs', 'cryptocurrencies', 'commission-free'],
             'is_featured' => true,
         ]);
     }

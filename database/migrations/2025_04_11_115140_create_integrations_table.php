@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_integrations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('integration_id')->constrained();
+            $table->foreignId('integration_id')->constrained('integrations_list', 'id');
             $table->string('api_key')->nullable();
             $table->string('access_token')->nullable();
             $table->string('refresh_token')->nullable();
