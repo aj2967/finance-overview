@@ -3,8 +3,11 @@
 namespace App\Services\Integrations\Drivers;
 
 use App\Models\Integrations\UserIntegrations;
+use App\Services\Integrations\Clients\Trading212APIClient;
 use App\Services\Integrations\Contracts\IntegrationDriverInterface;
+use App\Services\Integrations\DTOs\AccountSummary;
 use App\Services\Integrations\DTOs\CreateUserIntegrationData;
+use App\Services\Integrations\DTOs\PortfolioSyncResult;
 use App\Services\Integrations\Exceptions\MissingCredentialException;
 use Illuminate\Support\Facades\Http;
 
@@ -41,10 +44,22 @@ class Trading212Driver implements IntegrationDriverInterface
         //            ->get('https://api.trading212.com/v1/verify');
     }
 
-    public function sync(UserIntegrations $userIntegration): array
+    public function sync(UserIntegrations $userIntegration): PortfolioSyncResult
     {
-        // call Trading212 api using decrypted credentials
-        // map into common DTO and return
-        return [];
+        $creds = $userIntegration->credentials; // decrypted JSON column
+
+        $api = new Trading212APIClient($creds);
+
+        $summary = $api->getAccountSummary();
+
+        return new PortfolioSyncResult(
+            summary: new AccountSummary(
+                totalBalance: $summary['totalValue'],
+                cashBalance: $summary['cash'] ?? null,
+                investedValue: $summary['invested'] ?? null,
+            ),
+            positions: [],
+            transactions: []
+        );
     }
 }

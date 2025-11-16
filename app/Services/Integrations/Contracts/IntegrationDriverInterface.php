@@ -4,6 +4,7 @@ namespace App\Services\Integrations\Contracts;
 
 use App\Services\Integrations\DTOs\CreateUserIntegrationData;
 use App\Models\Integrations\UserIntegrations;
+use App\Services\Integrations\DTOs\PortfolioSyncResult;
 
 interface IntegrationDriverInterface
 {
@@ -20,5 +21,5 @@ interface IntegrationDriverInterface
     public function validateCredentials(array $credentials): void;
 
     // Perform a sync (returns normalised DTO)
-    public function sync(UserIntegrations $userIntegration): array;
+    public function sync(UserIntegrations $userIntegration): PortfolioSyncResult;
 }
