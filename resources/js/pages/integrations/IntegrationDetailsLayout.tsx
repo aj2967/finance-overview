@@ -41,11 +41,15 @@ export default function IntegrationDetailsLayout({ integration, userIntegration 
                             <h1 className="text-2xl font-bold">{integration.name}</h1>
                             <div className="mt-1 flex items-center gap-2">
                                 <Badge variant="outline">{integration.category}</Badge>
-                                <Badge variant={integration.status === 'active' ? 'success' : 'destructive'}>{integration.status}</Badge>
+                                <Badge variant={integration.is_connected ? 'success' : 'destructive'}>
+                                    {integration.is_connected ? 'Connected' : 'Not Connected'}
+                                </Badge>
                             </div>
                         </div>
                     </div>
-                    <Button variant="outline">Documentation ↗</Button>
+                    <a href="https://docs.trading212.com/api" target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline">Documentation ↗</Button>
+                    </a>
                 </header>
 
                 {/* Main Content Grid */}
@@ -53,6 +57,7 @@ export default function IntegrationDetailsLayout({ integration, userIntegration 
                     {/* Left Column - Connection & Settings */}
                     <div className="space-y-6 lg:col-span-2">
                         {/* Content for Specific Integrations */}
+                        {/* TODO: Integration component based on slug */}
                         <Trading212 userIntegration={userIntegration} />
                     </div>
 
@@ -93,12 +98,12 @@ export default function IntegrationDetailsLayout({ integration, userIntegration 
                                     <CardTitle className="text-destructive">Danger Zone</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
-                                    <div className="bg-muted flex lg:flex-col lg:gap-4 xl:flex-row xl:gap-0 items-center justify-between rounded-lg p-4">
+                                    <div className="bg-muted flex items-center justify-between rounded-lg p-4 lg:flex-col lg:gap-4 xl:flex-row xl:gap-0">
                                         <div>
                                             <p className="font-medium">Remove Integration</p>
                                             <p className="text-muted-foreground text-sm">Permanently disconnect and remove all data</p>
                                         </div>
-                                        <div className='lg:w-full xl:w-min flex justify-end ml-2'>
+                                        <div className="ml-2 flex justify-end lg:w-full xl:w-min">
                                             <Button variant="destructive">Disconnect</Button>
                                         </div>
                                     </div>
