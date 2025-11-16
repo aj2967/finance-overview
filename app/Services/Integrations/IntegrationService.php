@@ -4,15 +4,12 @@ namespace App\Services\Integrations;
 
 use App\Jobs\Integrations\SyncUserIntegrationJob;
 use App\Models\Integrations\UserIntegrations;
-use App\Models\IntegrationsList;
-use App\Models\User;
 use App\Repositories\Eloquent\UserIntegrationsRepository;
 use App\Repositories\Interfaces\UserIntegrationsRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Integrations\DTOs\CreateUserIntegrationData;
 use App\Services\Integrations\IntegrationFactory;
 use App\Services\Integrations\Validators\IntegrationsCredentialsValidator;
-use InvalidArgumentException;
 
 
 class IntegrationService
