@@ -2,10 +2,14 @@
 
 namespace App\Http\Requests\Integrations;
 
+use App\Services\Integrations\Validators\IntegrationsCredentialsValidator;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IntegrationsRequest extends FormRequest
 {
+    private IntegrationsCredentialsValidator $integrationCredentialsValidator;
+
     /**
      * Get the validation rules that apply to the request.
      */
@@ -15,7 +19,8 @@ class IntegrationsRequest extends FormRequest
         if ($this->isMethod('post')) {
             if ($this->routeIs('integrations.saveConnection')) {
                 return [
-                    'api_key' => ['required', 'string'],
+                    'integration_key' => ['required', 'string'],
+                    'credentials' => ['required', 'array'],
                 ];
             }
 
@@ -35,8 +40,40 @@ class IntegrationsRequest extends FormRequest
         return [];
     }
 
-    public function getApiKey(): ?string
+
+    protected function failedValidation(Validator $validator)
     {
-        return ($this->validated())['api_key'] ?? null;
+        dd($validator->errors()->toArray());
+    }
+
+    protected function prepareForValidation()
+    {
+        $credentials = $this->input('credentials');
+        if (is_string($credentials)) {
+            $decoded = json_decode($credentials, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $this->merge(['credentials' => $decoded]);
+            }
+        }
+    }
+
+
+    public function validateCredentials(): ?array
+    {
+        $integrationKey = ($this->validated())['integration_key'] ?? null;
+        $credentials = ($this->validated())['credentials'] ?? null;
+
+        $validator = new IntegrationsCredentialsValidator();
+        return $validator->validateFromConfig($integrationKey, $credentials);
+    }
+
+    public function integrationKey(): string
+    {
+        return $this->validated()['integration_key'];
+    }
+
+    public function credentials(): array
+    {
+        return $this->validated()['credentials'];
     }
 }

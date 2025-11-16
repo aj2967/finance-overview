@@ -24,6 +24,7 @@ export interface UserIntegration {
     auto_sync: 0 | 1;
     sync_frequency: 'manual' | 'hourly' | 'daily' | 'weekly';
     metadata?: Record<string, unknown> | null;
+    credentials?: 'client_id' | 'client_secret';
     connected_at?: string | null;
     created_at?: string;
     updated_at?: string;

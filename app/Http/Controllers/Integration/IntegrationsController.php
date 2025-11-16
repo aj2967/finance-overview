@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Integrations\IntegrationsRequest;
 use App\Models\Integrations\IntegrationsList;
 use App\Models\Integrations\UserIntegrations;
-use App\Services\IntegrationService;
+use App\Services\Integrations\DTOs\CreateUserIntegrationData;
+use App\Services\Integrations\IntegrationService;
 use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -53,29 +54,32 @@ class IntegrationsController extends Controller
             ->first();
 
         return Inertia::render('integrations/IntegrationDetailsLayout', [
-            'integration' => $integration,
-            'userIntegration' => $userIntegration,
+            'integration' => $integration->toArray(),
+            'userIntegration' => $userIntegration ? $userIntegration->toArray() : null,
         ]);
     }
 
-    public function saveConnection(IntegrationsRequest $request, string $integrationId)
+    public function saveConnection(IntegrationsRequest $request, IntegrationService $integrationService)
     {
+        $dto = new CreateUserIntegrationData(
+            userId: $request->user()->id,
+            integrationKey: $request->input('integration_key'),
+            credentials: $request->input('credentials')
+        );
+
         try {
-            $integration = IntegrationsList::findOrFail($integrationId);
-            $userIntegration = $this->integrationService->updateApiKey(auth()->user(), $integration->id, $request->getApiKey());
-
-            if (empty($userIntegration) || !($userIntegration instanceof UserIntegrations)) {
-                logger()->error('Failed to create or update UserIntegration for user ID ' . auth()->id() . ' and integration ID ' . $integration->id);
-                return back()->with('error', 'Failed to save connection: Unable to create or update integration record.');
-            }
-
-            // Trigger oauth process to connect the integration
-
-            return back()->with('success', 'API Key updated successfully');
+            $result = $integrationService->saveConnection($dto);
         } catch (Exception $e) {
-            logger($e->getMessage());
-            return back()->with('error', 'Failed to save connection: ' . $e->getMessage());
+            dd($e->getMessage());
+            return back()->withErrors(['integration' => $e->getMessage()]);
         }
+
+        // If auth step required, handle driver result (e.g. redirect url)
+        if (!empty($result['auth']['redirect'])) {;
+            return redirect()->away($result['auth']['redirect']);
+        }
+
+        return back()->with('success', 'Integration saved and sync queued.');
     }
 
     // public function updateAutoSync(IntegrationsRequest $request, UserIntegrations $integration)

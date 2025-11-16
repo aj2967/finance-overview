@@ -6,24 +6,28 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UserIntegration } from '@/types/integration';
 import { useForm } from '@inertiajs/react';
+import React from 'react';
 
 interface Props {
     userIntegration: UserIntegration;
     children?: React.ReactNode;
 }
 
+type Credentials = {
+    client_id: string;
+    client_secret: string;
+};
+
 export default function Trading212({ userIntegration }: Props) {
-    const integrationId = 1;
+    const integrationKey = 'trading212';
+    const initialCredentials = (userIntegration?.credentials ?? { client_id: '', client_secret: '' }) as Credentials;
+    console.log('Trading212', userIntegration)
 
     // API Key Form
-    const {
-        data: apiKeyData,
-        setData: setApiKey,
-        post: postApiKey,
-        processing: processingApiKey,
-        errors: apiKeyErrors
-    } = useForm({api_key: userIntegration?.api_key || '',});
-    console.log(userIntegration)
+    const { data, setData, post, processing, errors } = useForm<{ integration_key: string; credentials: Credentials }>({
+        integration_key: integrationKey,
+        credentials: initialCredentials
+    });
 
     // Auto-Sync Form
     // const autoSyncForm = useForm({
@@ -36,15 +40,15 @@ export default function Trading212({ userIntegration }: Props) {
     // });
 
     // Handle API Key Submission
-    const handleApiKeySubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    // const handleApiKeySubmit = (e: React.FormEvent) => {
+        // e.preventDefault();
         // apiKeyForm.patch(`/userIntegrations/${userIntegration.id}/api-key`);
-    };
+    // };
 
     // Handle Test Connection
     const handleSaveConnection = () => {
         console.log('posting...')
-        postApiKey(`/integrations/${integrationId}/save-connection`);
+        post(`/integrations/${integrationKey}/save-connection`);
     };
 
     // Handle Auto-Sync Change
@@ -77,24 +81,53 @@ export default function Trading212({ userIntegration }: Props) {
                     <CardTitle>Connection</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <form onSubmit={handleApiKeySubmit}>
+                    <form className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="api-key">API Key</Label>
+                            <Label htmlFor="client-id">API Key ID</Label>
                             <div className="flex gap-2">
                                 <Input
-                                    id="api-key"
+                                    id="client-id"
                                     type="text"
-                                    value={apiKeyData?.api_key}
-                                    onChange={(e) => setApiKey('api_key', e.target.value)}
-                                    placeholder="Enter your API key"
+                                    value={data.credentials?.client_id}
+                                    onChange={(e) => setData('credentials', {
+                                        ...data.credentials,
+                                        client_id: e.target.value,
+                                    })}
+                                    placeholder="Enter your API Key ID"
                                     className="flex-1"
-                                    disabled={processingApiKey}
+                                    disabled={processing}
                                 />
-                                <Button variant="secondary" isLoading={processingApiKey} onClick={handleSaveConnection} disabled={processingApiKey}>
-                                    Connect
-                                </Button>
                             </div>
-                            {apiKeyErrors?.api_key && <p className="text-destructive text-sm font-medium">{apiKeyErrors?.api_key}</p>}
+                            {errors['credentials.client_id'] && (
+                                <p className="text-destructive text-sm font-medium">{errors['credentials.client_id']}</p>
+                            )}
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="client-secret">Secret Key</Label>
+                            <div className="flex gap-2">
+                                <Input
+                                    id="client-secret"
+                                    type="text"
+                                    value={data.credentials?.client_secret}
+                                    onChange={(e) => setData('credentials', {
+                                        ...data.credentials,
+                                        client_secret: e.target.value,
+                                    })}
+                                    placeholder="Enter your secret key"
+                                    className="flex-1"
+                                    disabled={processing}
+                                />
+                            </div>
+                            {errors['credentials.client_secret'] && (
+                                <p className="text-destructive text-sm font-medium">{errors['credentials.client_secret']}</p>
+                            )}
+                        </div>
+
+                        <div className="flex w-full justify-end">
+                            <Button className="mt-2" variant="secondary" isLoading={processing} onClick={handleSaveConnection} disabled={processing}>
+                                Connect
+                            </Button>
                         </div>
                     </form>
 
