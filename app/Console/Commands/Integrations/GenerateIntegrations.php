@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Integrations;
 
 use App\Models\Integrations\IntegrationsList;
 use Database\Factories\Integrations\IntegrationsListFactory;
