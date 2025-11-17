@@ -42,7 +42,7 @@ return [
 
     'integrations' => [
         'trading212' => [
-            'base_url' => 'https://api.trading212.com'
+            'base_url' => 'https://live.trading212.com/api/v0'
         ]
     ]
 ];

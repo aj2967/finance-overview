@@ -3,7 +3,7 @@
 namespace App\Services\Integrations\Drivers;
 
 use App\Models\Integrations\UserIntegrations;
-use App\Services\Integrations\Clients\Trading212APIClient;
+use App\Services\Integrations\Clients\Trading212ApiClient;
 use App\Services\Integrations\Contracts\IntegrationDriverInterface;
 use App\Services\Integrations\DTOs\AccountSummary;
 use App\Services\Integrations\DTOs\CreateUserIntegrationData;
@@ -48,7 +48,7 @@ class Trading212Driver implements IntegrationDriverInterface
     {
         $creds = $userIntegration->credentials; // decrypted JSON column
 
-        $api = new Trading212APIClient($creds);
+        $api = new Trading212ApiClient((object) $creds);
 
         $summary = $api->getAccountSummary();
 

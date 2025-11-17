@@ -6,7 +6,7 @@ use App\Services\Integrations\Contracts\IntegrationApiClientInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
-class Trading212APIClient implements IntegrationApiClientInterface
+class Trading212ApiClient implements IntegrationApiClientInterface
 {
     protected string $baseUrl;
     protected object $credentials;
@@ -14,20 +14,18 @@ class Trading212APIClient implements IntegrationApiClientInterface
 
     public function __construct(object $credentials, ?Client $client = null)
     {
-        $this->credentials = $credentials;
         $this->baseUrl = config('services.integrations.trading212.base_url');
+        $this->credentials = $credentials;
+        $clientId = (string) ($this->credentials->client_id ?? '');
+        $clientSecret = (string) ($this->credentials->client_secret ?? '');
+        $basic = base64_encode("{$clientId}:{$clientSecret}");
 
-        // allow injecting a pre-configured Guzzle client for testing; otherwise create one
         $this->client = $client ?? new Client([
             'base_uri' => rtrim($this->baseUrl, '/') . '/',
-            'auth' => [
-                $this->credentials->client_id ?? '',
-                $this->credentials->client_secret ?? '',
-            ],
             'headers' => [
                 'Accept' => 'application/json',
+                'Authorization' => "Basic {$basic}",
             ],
-            // let Guzzle throw exceptions for 4xx/5xx responses (default)
             'http_errors' => true,
         ]);
     }
@@ -48,24 +46,24 @@ class Trading212APIClient implements IntegrationApiClientInterface
     /**
      * Return the underlying HTTP client (keeps the interface contract)
      */
-    protected function client()
+    public function client()
     {
         return $this->client;
     }
 
     public function getAccountSummary(): array
     {
-        return $this->request('investor/v1/accounts/summary');
+        return $this->request('equity/account/cash');
     }
 
     public function getPositions(): array
     {
-        return $this->request('investor/v1/positions');
+        return $this->request('equity/account/cash');
     }
 
     public function getTransactions(): array
     {
-        return $this->request('investor/v1/transactions');
+        return $this->request('equity/account/cash');
     }
 
     public function testCredentials(): bool

@@ -4,7 +4,7 @@ namespace App\Services\Integrations\Contracts;
 
 interface IntegrationApiClientInterface
 {
-    protected function client();
+    public function client();
 
     public function getAccountSummary(): array;
 
