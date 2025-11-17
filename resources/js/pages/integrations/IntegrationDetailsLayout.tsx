@@ -25,8 +25,8 @@ export default function IntegrationDetailsLayout({ integration, userIntegration 
             href: `/integrations/${integration.url}`,
         },
     ];
-    console.log('details', integration);
-    console.log('userIntegration', userIntegration);
+    // console.log('details', integration);
+    // console.log('userIntegration', userIntegration);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

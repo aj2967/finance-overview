@@ -1,9 +1,15 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    // CardFooter,
+    CardHeader,
+    CardTitle
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// import { Switch } from '@/components/ui/switch';
+// import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UserIntegration } from '@/types/integration';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
@@ -21,13 +27,17 @@ type Credentials = {
 export default function Trading212({ userIntegration }: Props) {
     const integrationKey = 'trading212';
     const initialCredentials = (userIntegration?.credentials ?? { client_id: '', client_secret: '' }) as Credentials;
-    console.log('Trading212', userIntegration)
 
     // API Key Form
     const { data, setData, post, processing, errors } = useForm<{ integration_key: string; credentials: Credentials }>({
         integration_key: integrationKey,
         credentials: initialCredentials
     });
+
+    const handleSaveConnection = () => {
+        // console.log('posting...')
+        post(`/integrations/${integrationKey}/save-connection`);
+    };
 
     // Auto-Sync Form
     // const autoSyncForm = useForm({
@@ -41,15 +51,9 @@ export default function Trading212({ userIntegration }: Props) {
 
     // Handle API Key Submission
     // const handleApiKeySubmit = (e: React.FormEvent) => {
-        // e.preventDefault();
-        // apiKeyForm.patch(`/userIntegrations/${userIntegration.id}/api-key`);
+    //     e.preventDefault();
+    //     apiKeyForm.patch(`/userIntegrations/${userIntegration.id}/api-key`);
     // };
-
-    // Handle Test Connection
-    const handleSaveConnection = () => {
-        console.log('posting...')
-        post(`/integrations/${integrationKey}/save-connection`);
-    };
 
     // Handle Auto-Sync Change
     // const handleAutoSyncChange = (checked: boolean) => {

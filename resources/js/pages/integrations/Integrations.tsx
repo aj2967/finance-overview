@@ -16,7 +16,6 @@ interface Props {
 }
 
 export default function Integrations({ integrations }: Props) {
-    console.log('integrations', integrations);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Integrations" />
