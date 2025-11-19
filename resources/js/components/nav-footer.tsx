@@ -1,9 +1,9 @@
 import { Icon } from '@/components/icon';
 import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { Appearance, useAppearance } from '@/hooks/use-appearance';
+import { useTheme } from '@/stores/useTheme';
 import { type NavItem } from '@/types';
 import { Moon, Sun } from 'lucide-react';
-import { useEffect, useState, type ComponentPropsWithoutRef } from 'react';
+import { type ComponentPropsWithoutRef } from 'react';
 
 export function NavFooter({
     items,
@@ -12,12 +12,7 @@ export function NavFooter({
 }: ComponentPropsWithoutRef<typeof SidebarGroup> & {
     items: NavItem[];
 }) {
-    const [theme, setTheme] = useState<Appearance>('light');
-    const { appearance, updateAppearance } = useAppearance();
-
-    useEffect(() => {
-        setTheme(appearance);
-    }, [appearance]);
+    const { theme, setTheme } = useTheme();
 
     return (
         <SidebarGroup {...props} className={`group-data-[collapsible=icon]:p-0 ${className || ''}`}>
@@ -41,7 +36,7 @@ export function NavFooter({
                             asChild
                             className="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100"
                         >
-                            <button onClick={() => updateAppearance(theme === 'light' ? 'dark' : 'light')}>
+                            <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
                                 {theme === 'light' ? <Moon size={24} /> : <Sun size={24} />}
                             </button>
                         </SidebarMenuButton>

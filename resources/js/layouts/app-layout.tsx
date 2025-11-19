@@ -1,8 +1,8 @@
 import { ClientToastListener } from '@/components/client-toast-listener';
 import FlashToastListener from '@/components/flash-toast-listener';
 import { Toaster } from '@/components/ui/sonner';
-import { useAppearance } from '@/hooks/use-appearance';
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
+import { useTheme } from '@/stores/useTheme';
 import { type BreadcrumbItem } from '@/types';
 import { type ReactNode } from 'react';
 
@@ -12,8 +12,7 @@ interface AppLayoutProps {
 }
 
 export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => {
-    const { appearance } = useAppearance();
-    console.log(appearance)
+    const { theme } = useTheme();
 
     return (
         <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
@@ -22,7 +21,7 @@ export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => {
             {/* Sonner toast */}
             <ClientToastListener />
             <FlashToastListener />
-            <Toaster position="top-right" theme={appearance} />
+            <Toaster position="top-right" theme={theme} />
 
         </AppLayoutTemplate>
     )
