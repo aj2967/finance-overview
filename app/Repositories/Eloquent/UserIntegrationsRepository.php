@@ -59,4 +59,11 @@ class UserIntegrationsRepository extends BaseRepository implements UserIntegrati
     {
         return json_decode(Crypt::decryptString($model->credentials), true);
     }
+
+    public function updateBalance(UserIntegrations $model, array $balanceData)
+    {
+        return $model->update([
+            'balance' => $balanceData
+        ]);
+    }
 }

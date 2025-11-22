@@ -24,9 +24,18 @@ class SyncUserIntegrationJob implements ShouldQueue
      */
     public function handle(IntegrationFactory $factory, UserIntegrationsRepository $repo): void
     {
+        // Get the driver and retrive external API data
         $driver = $factory->driverForKey($this->userIntegration->integration_key);
-        // $credentials = $repo->getCredentials($this->userIntegration);
-        $driver->sync($this->userIntegration);
+        $result = $driver->sync($this->userIntegration);
+
+        dd($result);
+
+        // Save to DB
+        // $repo->updateBalance($this->userIntegration, [
+        //     'total_balance' => $result->totalBalance,
+        //     'cash_balance' => $result->cashBalance,
+        //     'invested_value' => $result->investedValue,
+        // ]);
 
         // update model, emit events, etc.
     }
