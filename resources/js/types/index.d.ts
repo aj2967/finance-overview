@@ -22,6 +22,14 @@ export interface NavItem {
     isActive?: boolean;
 }
 
+export interface NavItemSection extends NavItem {
+    section: string
+}
+
+export interface NavItemFooter extends NavItem {
+    linkType: 'internal' | 'external';
+}
+
 export interface SharedData {
     name: string;
     quote: { message: string; author: string };

@@ -16,13 +16,12 @@ export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => {
 
     return (
         <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
-            {children}
+            <div className="overflow-y-auto p-6">{children}</div>
 
             {/* Sonner toast */}
             <ClientToastListener />
             <FlashToastListener />
             <Toaster position="top-right" theme={theme} />
-
         </AppLayoutTemplate>
-    )
+    );
 };

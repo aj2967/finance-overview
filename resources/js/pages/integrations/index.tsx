@@ -19,7 +19,7 @@ export default function Integrations({ integrations }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Integrations" />
-            <div className="bg-card flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+            <div className="bg-card flex h-full flex-1 flex-col gap-4 rounded-xl">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {integrations.map((integration, idx) => (
                         <Link

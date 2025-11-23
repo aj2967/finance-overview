@@ -42,7 +42,7 @@ class IntegrationsController extends Controller
                 return $arr;
             });
 
-        return Inertia::render('integrations/Integrations', compact('integrations'));
+        return Inertia::render('integrations/index', compact('integrations'));
     }
 
     public function show(string $slug)
